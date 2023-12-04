@@ -15,21 +15,7 @@
   <body>
 	    
     <div class="wrapper">
-	    {%- if content contains 'mermaid' -%}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0/mermaid.min.js"></script>
-<script>
-const config = {
-    startOnLoad:true,
-    theme: 'forest',
-    flowchart: {
-        useMaxWidth:false,
-        htmlLabels:true
-        }
-};
-mermaid.initialize(config);
-window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
-</script>
-{% endif %}
+	 
          {{ content }}
     
     </div>
@@ -38,6 +24,16 @@ window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
 	 
   </body>
 
+{% if page.mermaid == true %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0/mermaid.min.js"></script>
+<script>
+   mermaid.initialize({
+       startOnLoad:true,
+       theme: 'default'
+   });
+   window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
+</script>
+{% endif %}
 
 	
 </html>
