@@ -1,6 +1,6 @@
 # **PatriciaTrie**
 
-Introduction
+## Introduction
 
 This write-up is written to explain how to build a patricia trie and implement the searching (and by extension auto-complete)
 and insertion functionality. The implementation presented here follows Knuth's explanation of the inner workings of 
@@ -18,7 +18,7 @@ As defined by Gatson in his book "Handbook of Data Structures and Algorithms," a
 characters of a key and can be used to retrieve the entire key or parts of the key. In this context, 
 a key refers to a word, such as "Orange."
 
-Components of Trie
+ **Components of Trie**
 
 A trie is composed of nodes that come in two types: internal or external nodes. An internal node contains an array of 
 pointers that point to other nodes or null pointers. The branching of internal nodes is determined by the characters of the keys.
@@ -70,7 +70,7 @@ All the other characters will point to null nodes.
        
 ```
 
-Application of Tries
+ **Application of Tries**
 
 Tries are well-suited for searching unbounded or infinite keys. By "unbounded" or "infinite,"
 we refer to keys whose unique prefixes can lead to a large number of words. For example, consider the English alphabet, 
@@ -79,9 +79,9 @@ there are two possibilities: BAT and BIT. Since both possibilities share the sam
 we can efficiently retrieve either or both compared to traditional data structures such as arrays.
 Consequently, tries are useful in applications that require auto-completion and/or search logic.
 
-_An interesting fact is Google search engine uses compressed trie to auto-complete/predict your search queries._
+> _An interesting fact is Google search engine uses compressed trie to auto-complete/predict your search queries._
 
-General Shortcomings of Tries
+**General Shortcomings of Tries**
 
 At this point, observant readers may have noticed two things about tries. First, they take up a lot of space, 
 especially when the size of our alphabet is large. For example, if our alphabet is based on the extended ASCII alphabet,
@@ -92,9 +92,9 @@ Orphaned nodes lead to redundancy and make memory usage less efficient.
 
 To address these disadvantages, alternative data structures such as compressed forms of Trie were developed to solve these issues.
 
-## Patricia Trie
+### Patricia Trie
 
-Basic of Patricia Trie
+ **Basic of Patricia Trie**
 
 A Patricia Trie is a compressed version of a trie that uses bits to determine key branching. In a Patricia Trie,
 if a parent has only one child, they are merged, 
@@ -114,7 +114,7 @@ Additionally, the root node never has a right link.
 There are several ways of implementing the basic idea of Patricia tries but perhaps the simplest way is the one which will be discussed
 herein.
 
-Rules of Implementation of a Patricia Trie
+ **Rules of Implementation of a Patricia Trie** 
 
 Before implementing the trie, there are two rules we ought to be aware of
 
@@ -124,7 +124,7 @@ Before implementing the trie, there are two rules we ought to be aware of
 a sentinel value (a unique character) at the end of a text. For example, in the key "A B C D,"
 the sentinel value here is the space character (" "). In some implementations, a period (".") is used as a sentinel value.
 
-Components of Patricia Trie
+ **Components of Patricia Trie**
 
 A node in a patricia trie is made up of:
 
@@ -156,7 +156,7 @@ The first figure shows A's left link pointing to its descendant/child and the ri
 The second graph shows A's left link pointing to its descendant/child and the child's right node pointing to A which is 
 its ancestor/parent
 
-_To determine whether the node's left and right link point to its ancestor or child, Knuth suggests that each node
+> _To determine whether the node's left and right link point to its ancestor or child, Knuth suggests that each node
 should have a left tag and right tag. However, this introduces another complexity during insertion operation. Hence, this 
 implementation will show an alternative -- albeit cheeky -- way of determining whether left and right link point to
 an ancestor/child or itself._
@@ -173,7 +173,7 @@ be 3 and so on.
 any value in them but that does not mean they can't have one.  
 
 
-Implementation of Patricia Trie
+**Implementation of Patricia Trie**
 
 Suppose we were implementing auto-completion logic in our application, and our text is "A B C D E F." 
 To leverage the Patricia Trie algorithm, we would need two functions:
@@ -198,7 +198,7 @@ trying to insert and the child's bit pattern
 3.  The last thing we will need is to retrieve the bit located at the skipBit. We will use this bit to determine the branching
 that is: which direction to search for our needed node or which direction to insert our newNode.
 
-Searching in a Patricia Trie
+ **Searching in a Patricia Trie**
 
   Pseudocode
   
@@ -254,7 +254,7 @@ The searching in patricia trie is quite simple. Suppose you have the following t
        
 ```
 
-_ignore the arrows directions and focus on the tag accompanying the arrow_
+> _ignore the arrows directions and focus on the tag accompanying the arrow_
 
 and the bitPatterns and skipBits for each of the characters are as follows
 
@@ -290,7 +290,7 @@ The same procedure is to be repeated for other keys.
 
 
 
- Patricia Insert 
+ **Patricia Insert**
 
 
 Now unto insert operation. 
@@ -406,7 +406,7 @@ We need to remember/cache A's right link (which in this case is Y). Then we assi
 To complete the linking, we need to link our newNode Z with A's previous right link, which is Y. 
 This is necessary because Z displaced Y, and we need to re-adjust.
 
-_Recall that I mentioned I would show you a cheeky way of determining whether a node points to an ancestor or a child?
+> _Recall that I mentioned I would show you a cheeky way of determining whether a node points to an ancestor or a child?
 Well, this is the 'Ahaaa'/'Eureka' moment. In the above flowchart, A is a parent of both X and Y.
 When we want to insert a new Node Z and link it with an ancestor/parent that has another node as the child,
 you need to know where to place the existing child. How do we determine this? Well, it's simple. 
@@ -472,7 +472,7 @@ If the keys are inserted correctly by the reader, the following flow chart shows
         
 ```
 
-Parting Shot
+**Parting Shot**
 
 A keen reader will notice that, even though I have mentioned one of Trie's applications is to implement an auto-complete logic, 
 I haven't quite shown how. I leave this as an exercise for you, the reader.
@@ -483,7 +483,7 @@ and in particular, the last accessed node after a search operation._
 
 The corresponding kotlin implementation can be found here: [PatriciaTrie Kotlin](https://gist.github.com/GibsonRuitiari/ade41d75def0374f4c261a0aa3072c69)
 
-Conclusion
+## Conclusion
 
 If you have made it up to here, and you have understood most of the content then you deserve a pat on the back :xd.
 
