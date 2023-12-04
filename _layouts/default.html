@@ -12,17 +12,11 @@
     <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
-    {% include head-custom.html %}
-  </head>
-  <body>
-    <div class="wrapper">
-	    
-         {{ content }}
-    
-    </div>
-    <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
 
-	  <script>
+  <body>
+	    <pre><code class="language-mermaid">graph LR A-->B</code></pre>
+	  
+	   <script>
 var config = {
     startOnLoad:true,
     theme: 'forest',
@@ -34,6 +28,15 @@ var config = {
 mermaid.initialize(config);
 window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
 </script>
+	  
+    <div class="wrapper">
+	    
+         {{ content }}
+    
+    </div>
+    <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
+
+	 
   </body>
 
 
