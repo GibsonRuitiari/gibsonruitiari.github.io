@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ site.lang | default: "en-US" }}">
   <head>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0/mermaid.min.js"></script>
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,22 +13,23 @@
     <![endif]-->
 
   <body>
-	  
-	   <script>
-var config = {
+	    
+    <div class="wrapper">
+	    {%- if content contains 'mermaid' -%}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0/mermaid.min.js"></script>
+<script>
+const config = {
     startOnLoad:true,
     theme: 'forest',
-    flowchart:{
-            useMaxWidth:false,
-            htmlLabels:true
+    flowchart: {
+        useMaxWidth:false,
+        htmlLabels:true
         }
 };
 mermaid.initialize(config);
 window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
 </script>
-	  
-    <div class="wrapper">
-	    
+{% endif %}
          {{ content }}
     
     </div>
