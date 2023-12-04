@@ -13,4 +13,4 @@ I hope you enjoy the content! 😊
 
 ### Table of Contents
 
-1. [Patricia Trie](https://gibsonruitiari.github.io/Algorithms%20Write%20Ups/Patricia%20Trie)
+1. Patricia Trie Implementation: [Patricia Trie](https://gibsonruitiari.github.io/Algorithms%20Write%20Ups/Patricia%20Trie)
