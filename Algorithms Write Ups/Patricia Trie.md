@@ -28,7 +28,8 @@ As an example, the parent or starting node utilizes the first character of our k
 Subsequently, its descendant uses the second character, and the descendants following that use the next character 
 in sequence, and so forth.
 
-```mermaid
+```markdown
+<pre class="mermaid">
   graph TD;
     
       root-->B([B]);
@@ -40,7 +41,15 @@ in sequence, and so forth.
       A--> BAT([BAT]);
       B-->I([I]);
       I-->BIT([BIT]);
+</pre>
 
+<script type="module">
+	import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+	mermaid.initialize({
+		startOnLoad: true,
+		theme: 'dark'
+	});
+</script>
 ```
 
 In the illustration above, the root has no label and lacks a node pointing to it. The root serves as the starting
