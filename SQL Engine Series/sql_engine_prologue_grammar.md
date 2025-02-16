@@ -443,7 +443,7 @@ A complete SQL statement can be one of the following: an **INSERT** statement, a
 
 The steps include:
 
-1. Define a base **SqlStatement** sealed class
+The first step is to define a base **SqlStatement** sealed class
 
 ```kotlin
 
@@ -451,7 +451,7 @@ sealed class SqlStatement // our base class
 
 ```
 
-2. Define the **Insert** class without explicitly including the keywords **"INSERT INTO"** and **"VALUES"**. This is because these keywords are inherently represented by the class name and its properties. 
+The next step is to define the **Insert** class without explicitly including the keywords **"INSERT INTO"** and **"VALUES"**. This is because these keywords are inherently represented by the class name and its properties. 
 Therefore, explicitly defining them would be redundant. However, this approach is **context-dependent**. 
 In scenarios such as designing a fully-fledged programming language, defining keywords explicitly—such as using **ENUMS**—may be necessary. In our case, however, we have chosen not to do so. The **Insert** class will contain **tableName**, **columns** and **values** as its properties. These properties represent the:
 
@@ -486,12 +486,15 @@ which can expand into a sequence of <value> elements separated by commas. Specif
 ```
 
 Since SQL allows expressions in **INSERT** statements, for example inserting computed values such as:
+
 ```sql
+
 INSERT INTO users (id, name, created_at) VALUES (1, UPPER('bob'), current_timestamp);
+
 ```
 
-defining **values** as **List<Expression>** ensures flexibility and correctness when handling different types of insertable data. 
-Define our **Expression** class
+Defining **values** as List<Expression> ensures flexibility and correctness when handling different types of insertable data. 
+The other step is to define our **Expression** class
 
 ```kotlin
 sealed class Expression
@@ -507,7 +510,7 @@ data class BinaryOperation(val left: Expression,val operator: Operator,
 val right: Expression) : Expression()
 ```
 
-3. Defining the Expression class as sealed class allows us handle different types of SQL expressions thus ensuring type-safety.
+Defining the Expression class as sealed class allows us handle different types of SQL expressions thus ensuring type-safety.
 
 The **IdentifierExpression** represents an SQL Identifier such as a column name, table name or an alias in an SQL Query. 
 The  **identifier** property stores the actual name. As an example:
