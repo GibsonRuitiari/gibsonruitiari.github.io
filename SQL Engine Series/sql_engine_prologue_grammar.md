@@ -431,27 +431,28 @@ val values: List<Expression>) : SqlStatement()
 
 The reason **values** is of type **Expression** is that our **insert_statement** requires a **<values_list>**, which can expand into a sequence of **<value>** elements separated by commas. Specifically:
 
-1. A **<values_list>** consists of one or more **<value>** elements, separated by **","**
-2. Each **<value>** can be either an **<sql_literal>** (e.g., a string or number) or an **<expression>**
-3. An **<expression>** can further expand into an **<identifier>**, **<sql_literal>**, or a **<function_call>**.
+1. A `<values_list>` consists of one or more `<value>` elements, separated by `","`
+2. Each `<value>` can be either an `<sql_literal>` (e.g., a string or number) or an `<expression>`
+3. An `<expression>` can further expand into an `<identifier>`, `<sql_literal>`, or a `<function_call>`.
 
-```kotlin
+```
 <value_list> → <value> {","<value>} *// Bob, 12*
+
 <value> →  <sql_literal> | <expression> *// Bob or Age+3*
+
 <expression> →  <identifier> | <sql_literal> | <function_call>
+
 <function_call> →  <identifier> "(" [<expression_list>] ")" // SUM(age)
+
 <expression_list> → <expression> {","<expression>} // age, height. salary
 ```
 
 Since SQL allows expressions in **INSERT** statements, for example inserting computed values such as:
-
 ```sql
 INSERT INTO users (id, name, created_at) VALUES (1, UPPER('bob'), current_timestamp);
-
 ```
 
 defining **values** as **List<Expression>** ensures flexibility and correctness when handling different types of insertable data.
-
 1. Define our **Expression** class
 
 ```kotlin
@@ -472,7 +473,7 @@ Defining the Expression class as sealed class allows us handle different types o
 
 1. The **IdentifierExpression** represents an SQL Identifier such as a column name, table name or an alias in an SQL Query. The  **identifier** property stores the actual name. As an example:
 
-```kotlin
+```
 // sql statement
 SELECT name FROM users;
 
@@ -482,13 +483,11 @@ val nameColumn = IdentifierExpression("name")
 
 1. The **LiteralExpression** represents a constant value in an SQL Statement. In this case, the value is of type ‘**SqlLiteral**’ and it can be either a **string**, **number** or **null.** As an example
 
-```kotlin
-
+```
 // sql statement
-SELECT '**Alice**', 
+SELECT 'Alice', 
 
 val aliceLiteral= LiteralExpression(StringLiteral("Alice"))
-
 ```
 
 1. The **FunctionCallExpression** represents an SQL Query Function call. The arguments of the class store the name of the function and  list of expressions that are supposed to be the arguments of the function called. As an example:
@@ -504,9 +503,9 @@ val upperFunction = FunctionCallExpression(
 )
 ```
 
-1. The **BinaryExpression** represents SQL Query binary operations such as “≠”, “==” & “AND”.  The **left** and **right** are the two expressions being worked on, and the **operator** represents the operation being performed. As an example:
-
-```kotlin
+1. The **BinaryExpression** represents SQL Query binary operations such as “≠”, “==” & “AND”.  
+The **left** and **right** are the two expressions being worked on, and the **operator** represents the operation being performed. As an example:
+```
 // sql statement
 SELECT age + 5 FROM users WHERE name = 'Alice';
 
@@ -542,16 +541,11 @@ The **StringLiteral** represents SQL string literals such as "hello" or "Alice".
 ![https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjVwOHVob3NrdGhibGh2MHVhNnEybmljY3g5MDZpdWVvYmhnMm9kcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cRMgB2wjHhVN2tDD2z/giphy.gif](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjVwOHVob3NrdGhibGh2MHVhNnEybmljY3g5MDZpdWVvYmhnMm9kcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cRMgB2wjHhVN2tDD2z/giphy.gif)
 
 Let’s put all of this together and construct a Kotlin class representing the following complex insert statement:
-
-
-
 ```sql
 INSERT INTO users (id, name, age) VALUES (1, UPPER('bob'), 12);
 
 ```
-
 The corresponding Kotlin class equivalent would be:
-
 ```kotlin
 val insertStatement = Insert(
     table = "users",
@@ -566,7 +560,6 @@ val insertStatement = Insert(
     )
 )
 ```
-
 Whoop Whoop we have doneee it!!!!!!!🎉🎉🎉
 
 ![https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHYwNWZqNTh3c3BtMDY5ZjIwdmNoYXRzMTB5MHZsOGJpZHA3cHd0dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4DUjG2ei31nA2evo5g/giphy.gif](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHYwNWZqNTh3c3BtMDY5ZjIwdmNoYXRzMTB5MHZsOGJpZHA3cHd0dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4DUjG2ei31nA2evo5g/giphy.gif)
