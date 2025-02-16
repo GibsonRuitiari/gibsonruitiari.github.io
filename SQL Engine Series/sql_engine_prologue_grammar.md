@@ -131,13 +131,17 @@ our sentence rule, we can describe English language's sentence structure as foll
               <noun> → “Cat”
 ```
 The above `<sentence>` rule is structured as follows: A `<subject>` followed by a `<verb>` and it ends with a full-stop `.`.
-The `<subject>` consists of `<determiner>` and `<noun>`. On the other hand, the `<verb>` is defined as the word 'runs'.
-The `<determiner>` is defined as the word 'The', while `<noun>` is defined as the word 'Cat'.
+The `<subject>` consists of `<determiner>` and `<noun>`. 
+
+On the other hand, the `<verb>` is defined as the word 'runs'. The `<determiner>` is defined as the word 'The', while `<noun>` is defined as the word 'Cat'.
+
 Putting it all together, when we compile the `<sentence>` rule, we get 'The Cat runs.' 
+
 Take note that `<sentence>` rule is our start symbol, because it is the top level rule that represents the complete structure of 
 an English language sentence.
 
 Similarly, the structure for an SQL select statement can be described as follows:
+
 ```
           <select_statement> → SELECT  <column_list> FROM  <table_name>
           <column_list> → "*"
@@ -188,7 +192,7 @@ The order by which items appear is un-important. An example, “The” | “Are�
 3. Option → this is represented by `[  ]` and items enclosed inside the square brackets are optional, that is, they can either be there or not; they can either be included or discarded.
 4. Repetition → this is represented by `{   }` and items enclosed inside the curly brackets are repeatable, that is, they can be included 0 or more times.
 
-It is important to note that in EBNF, terminals such as keywords are enclosed inside `“  “`. Thus, any symbol enclosed inside 
+It is important to note that in EBNF, terminals such as keywords are enclosed inside `“...“`. Thus, any symbol enclosed inside 
 “…” is a terminal. As an example `the` is a terminal.
 
 ### Application
@@ -224,17 +228,25 @@ The `<select_statement>` rule it can be represented in EBNF notation form as:
 <comparison_operator> → "=" | "!=" | ">" | "<" | ">=" | "<="
 ```
 The `<select_statement>` rule is defined as sequence of `SELECT` keyword, `<select_list>` rule, `FROM` keyword, and `<table-name>`.
+
 The rule ends with two optional constructs: 
  - The `WHERE` keyword and a `<condition>`.
  - The `GROUP BY` keyword and an `<order_list>`.
+
 The `<column_list>` rule is defined as a sequence of `<identifier>`, followed by **zero or more** occurrences of **","** 
 and another `<identifier>`. 
+
 The `<select_list>` rule can expand into either the terminal symbol **"*"** or the `<column_list>` rule. 
+
 The `<identifier>` rule expands into a single `<letter>` or `<digit>`, followed by **zero or more** occurrences of `<digit>`, `<letter>`, 
 or the terminal symbol **"_"**. 
+
 The `<digit>` rule represents **any number from 0-9**, where each digit can be **selected independently** (e.g., you can choose `"0"` while discarding the rest). 
-The `<letter>` rule consists of either `<upper_case>` or `<lower_case>` letters
+
+The `<letter>` rule consists of either `<upper_case>` or `<lower_case>` letters.
+
 The `<condition>` rule expands into a sequence of:  `<identifier>`, `<comparison_operator>` and `<identifier>`. 
+
 The `<comparison_operator>` rule consists of a set of alternatives, including **"="**, **">"**, and others.
 
 Given the `<select_statement>` rule, an example of an SQL Statement that matches it can be:
@@ -275,12 +287,12 @@ For the `<insert_statement>` rule it can be represented in EBNF notation form as
 
 <letter>  → <upper_case> | <lower_case>
 ```
-The `<insert_statement>` rule can be described as a sequence of: **INSERT INTO** keyword, `<identifer>` rule, "**(**" terminal symbol, 
-`<column_list> ` rule, "**)**" terminal symbol,  **VALUES** keyword, "**(**" terminal symbol, ` <value_list> ` rule,  and "**)**" terminal symbol.
+The `<insert_statement>` rule can be described as a sequence of: **INSERT INTO** keyword, `<identifer>` rule, "(" terminal symbol, 
+`<column_list>` rule, ")" terminal symbol,  **VALUES** keyword, "(" terminal symbol, `<value_list>` rule,  and ")" terminal symbol.
 
-On the other hand, the `<value_list>` rule is defined as a sequence of `<value>` followed by **one or more** occurrences of **,** and another ` <value> `.
-A `<value>` is described by the `<sql_literal>` rule, which can expand into a `<string>`, a `<number>`, or `<null>`. 
-A `<string>` expands into a sequence of characters enclosed in either double quotes **" "** or single quotes **' '**. 
+On the other hand, the `<value_list>` rule is defined as a sequence of `<value>` followed by **one or more** occurrences of ", " and another `<value>`.
+A `<value>` is described by the `<sql_literal>` rule, which can expand into a `<string>`, a  `<number>`, or `<null>`. 
+A `<string>` expands into a sequence of characters enclosed in either double quotes `"  "` or single quotes `' '`. 
 
 The `<characters>` rule expands into either:
     - A single `<character>` chosen from `<digit>` or `<letter>`, or
