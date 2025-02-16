@@ -318,7 +318,7 @@ A **derivation tree** (also called a **parse tree**) provides a graphical repres
 For the rule and input discussed earlier, we can construct the derivation tree as follows:
 
 1. Choose the root node, which in this case is `<select_statement>`;
-2. Expand the root node into “SELECT” `<select_list>` “FROM” `<table_name>`, and optionally [”WHERE” `<condition>`] since the “where” part appears in our input
+2. Expand the root node into “SELECT” `<select_list>` “FROM” `<table_name>`, and optionally ["WHERE" `<condition>`] since the “where” part appears in our input
 3. Since “SELECT” is a terminal symbol, we go to the next symbol `<select_list>`, thus expand `<select_list>` into "*"  because  the symbol ‘*’ appears in our input. 
 Note that we have dropped `<column_list>` because it does not appear in our input.
 4. Since “FROM” is a terminal symbol, we go to the next symbol `<table_name>`, we will expand it into `<identifier>`, which is then further expanded into “USERS”. 
@@ -327,3 +327,259 @@ Note that the characters “USERS” are a combination of letters thus fitting t
 6. Expand the `<condition>` rule into “AGE > 12”
 
 Graphically, this can be represented as:
+![A derivation tree showing that “SELECT * FROM USERS WHERE AGE > 12” matches the description of select_statement rule](https://gibsonruitiari.github.io/resources/derivitative%20tree.png)
+
+Despite successfully proving our input matches with the description of the `<select_statement>` rule, you might have noticed a
+gap in the process, a weakness in EBNF. The next section discusses this weakness.
+
+### Weakness of EBNF: Semantics v Syntax
+
+Having dealt with proof, a keen reader may have observed that while we can prove that an input matches with the description 
+of the `<select_statement>` rule, there is no way of proving that the input makes sense.
+
+![Yes, EBNF is not perfeectt! I am sorry 😟](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXRkdm4xZWlkZHpoNzZieTI1NDdqd3Z1NDRicnllcW9saHdrbzA5aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qn6rtLtmwIX60/giphy.gif)
+
+Consider a scenario where the `age` column in our database only accepts **integers**, but the input provides `"1_"` as the age. 
+According to our `<select_statement>` rule, `"1_"` would be considered **syntactically valid**. However, from a **semantic** perspective,
+the underscore (`_`) makes the value **invalid**, as the database cannot interpret it as a valid integer. Accepting such incorrect 
+inputs can lead to unexpected or erroneous behavior. This highlights a key limitation of **EBNF (Extended Backus-Naur Form)**: it defines only the **syntax** (structure) of a language but not its **semantics** (meaning). 
+In other words, **EBNF alone cannot guarantee that a syntactically correct input is also meaningful or valid**. 
+Another important observation is that many of the rules we have discussed reference other rules, creating a **recursive** structure 
+in their definitions. To fully understand EBNF, we must briefly explore recursion, which is the focus of the next section.
+
+### Recursion in EBNF
+
+![A visual depiction of recursion 😃](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXdtYWpuaDY4Z2xhNTl4YWVqN3pncHAxeWs3YmRiM2thdTR0MTNqbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MufutKnKsG3ao/giphy.gif)
+
+Recursion deserves special attention for two key reasons: it can replace repetition control structures and help describe complex grammar rules.
+There are two types of recursion: mutual and direct. We'll focus on direct recursion to keep our discussion focused and manageable.
+
+>💡For more about mutual recursion please see ([Mutual Recursion](https://en.wikipedia.org/wiki/Mutual_recursion))
+
+Direct recursion occurs when a rule references its own name within its definition. To illustrate this concept, 
+consider how SQL statements can contain expressions that evaluate to single values. For example, take a simple select statement such as
+```
+         SELECT * FROM USERS WHERE AGE > (10+AGE)
+```
+The expression `(10+AGE)` is an arithmetic operation. Such expressions help create complex SQL queries by allowing mathematical calculations.
+
+>💡 For more about expressions see ([SQL Server Expressions](https://learn.microsoft.com/en-us/sql/t-sql/language-elements/expressions-transact-sql?view=sql-server-ver16)).
+
+So how would you define an *expression* rule that captures these expressions? This is where recursion comes in. 
+An `<expression>` rule can be described as follows:
+```
+<expression> → <sql_literal> | <expression> <operator> <expression>
+                               //<--recursion-->         <--recursion-->     
+
+<sql_literal> → <number> | <letter> | <null>
+
+<operator> →  “+”  |  “*” |  “/”
+```
+
+The `<expression>` rule has two possible interpretations: it can be either a simple `<sql_literal>`, or it can be a 
+combination of `<expression>`, `<operator>`, and another `<expression>`. This structure makes the <expression> rule directly recursive.
+
+We can create a non-recursive alternative by introducing an abstract non-terminal rule that transforms the recursive rule 
+into an equivalent iterative form. This means breaking down the recursive rule into sequential, processable steps.
+Following this approach, we can express it as:
+```
+<expression> → <term> {<operator> <term>} 
+
+<term> → <sql_literal>  | <expression>
+```
+
+The alternative rule can be understood as follows:
+
+An `<expression>` consists of a `<term>` followed by zero or more occurrences of an `<operator>` and another `<term>`. 
+The `<term>` itself can expand into either a `<sql_literal>` or another `<expression>`. While this alternative definition 
+produces the same result as the original `<expression>` rule, it introduces an additional abstraction (`<term>`), 
+which increases complexity without adding significant value. When implementing direct recursion in parsing, it is essential 
+to include a non-recursive alternative to **prevent infinite recursion**. In our implementation, `<sql_literal>` serves as this base case, 
+ensuring termination. 
+
+In sum, when designing grammar rules, strive to balance complexity with readability.
+
+The next and final part will focus on what we've been building up to: constructing Kotlin classes to represent our SQL grammar.
+
+![Oh, the excitemeeeent!!!!!!! 😌](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2g4Z3M3YWt4bHoxbHNqMTd3b3FhcnNmaDR5Y2wwNWdodDFtOWhsZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oF5oUYTOhvFnO/giphy.gif)
+
+## Representing Our SQL Grammar in Kotlin
+
+We have already defined some of the most essential SQL statements, namely insert and select statements. At this point, you should understand how to construct, read, and verify grammar rules. You can find a complete structure of our SQL Grammar rules [here](https://www.notion.so/2e4614eee5b37bedab198b167f3e74bd?pvs=21).
+
+A complete SQL statement can be one of the following: an **INSERT** statement, a **SELECT** statement, an **UPDATE** statement, or a **DELETE** statement. Since an SQL statement has multiple distinct types, we can represent this using **Kotlin’s sealed classes**, ensuring **type safety** and **exhaustive handling** in `when` expressions.
+
+The steps include:
+
+1. Define a base **SqlStatement** sealed class
+
+```kotlin
+sealed class SqlStatement // our base class
+
+```
+
+1. Define the **Insert** class without explicitly including the keywords **"INSERT INTO"** and **"VALUES"**. This is because these keywords are inherently represented by the class name and its properties. Therefore, explicitly defining them would be redundant. However, this approach is **context-dependent**. In scenarios such as designing a fully-fledged programming language, defining keywords explicitly—such as using **ENUMS**—may be necessary. In our case, however, we have chosen not to do so. The **Insert** class will contain **tableName**, **columns** and **values** as its properties. These properties represent the:
+    1. tableName → name of the table being modified;
+    2. columns → list of column-names affected by the insertion operation; and
+    3. values → a list of values to be inserted.
+
+```kotlin
+data class Insert(val tableName: String,    
+val columns: List<String>,    
+val values: List<Expression>) : SqlStatement()
+```
+
+The reason **values** is of type **Expression** is that our **insert_statement** requires a **<values_list>**, which can expand into a sequence of **<value>** elements separated by commas. Specifically:
+
+1. A **<values_list>** consists of one or more **<value>** elements, separated by **","**
+2. Each **<value>** can be either an **<sql_literal>** (e.g., a string or number) or an **<expression>**
+3. An **<expression>** can further expand into an **<identifier>**, **<sql_literal>**, or a **<function_call>**.
+
+```kotlin
+<value_list> → <value> {","<value>} *// Bob, 12*
+<value> →  <sql_literal> | <expression> *// Bob or Age+3*
+<expression> →  <identifier> | <sql_literal> | <function_call>
+<function_call> →  <identifier> "(" [<expression_list>] ")" // SUM(age)
+<expression_list> → <expression> {","<expression>} // age, height. salary
+```
+
+Since SQL allows expressions in **INSERT** statements, for example inserting computed values such as:
+
+```sql
+INSERT INTO users (id, name, created_at) VALUES (1, UPPER('bob'), current_timestamp);
+
+```
+
+defining **values** as **List<Expression>** ensures flexibility and correctness when handling different types of insertable data.
+
+1. Define our **Expression** class
+
+```kotlin
+sealed class Expression
+
+data class IdentifierExpression(val identifier: String) : Expression()
+
+data class LiteralExpression(val literal: SqlLiteral) : Expression()
+
+data class FunctionCallExpression(val functionName: String,
+val arguments: List<Expression>) : Expression()
+
+data class BinaryOperation(val left: Expression,val operator: Operator,
+val right: Expression) : Expression()
+```
+
+Defining the Expression class as sealed class allows us handle different types of SQL expressions thus ensuring type-safety.
+
+1. The **IdentifierExpression** represents an SQL Identifier such as a column name, table name or an alias in an SQL Query. The  **identifier** property stores the actual name. As an example:
+
+```kotlin
+// sql statement
+SELECT name FROM users;
+
+// in kotlin would be
+val nameColumn = IdentifierExpression("name")
+```
+
+1. The **LiteralExpression** represents a constant value in an SQL Statement. In this case, the value is of type ‘**SqlLiteral**’ and it can be either a **string**, **number** or **null.** As an example
+
+```kotlin
+
+// sql statement
+SELECT '**Alice**', 
+
+val aliceLiteral= LiteralExpression(StringLiteral("Alice"))
+
+```
+
+1. The **FunctionCallExpression** represents an SQL Query Function call. The arguments of the class store the name of the function and  list of expressions that are supposed to be the arguments of the function called. As an example:
+
+```kotlin
+// sql statement
+SELECT UPPER(name)
+
+// in kotlin would be
+val upperFunction = FunctionCallExpression(
+    functionName = "UPPER",
+    arguments = listOf(IdentifierExpression("name"))
+)
+```
+
+1. The **BinaryExpression** represents SQL Query binary operations such as “≠”, “==” & “AND”.  The **left** and **right** are the two expressions being worked on, and the **operator** represents the operation being performed. As an example:
+
+```kotlin
+// sql statement
+SELECT age + 5 FROM users WHERE name = 'Alice';
+
+// can be represented in kotlin as 
+val addition = BinaryOperation(
+left = IdentifierExpression("age"),
+operator = ArithmeticOperator.PLUS,  //  an enum with PLUS (+)
+right = LiteralExpression(NumberLiteral("5"))
+)
+
+val condition = BinaryOperation(
+    left = IdentifierExpression("name"),
+    operator = ComparisonOperator.EQUALS,  // an enum with EQUALS (=)
+    right = LiteralExpression(StringLiteral("Alice"))
+)
+```
+The **SqlLiteral** class can be defined as follows:
+
+```kotlin
+sealed class SqlLiteral
+
+data class StringLiteral(val value: String) : SqlLiteral()
+
+data class NumberLiteral(val integer:Double) : SqlLiteral()
+
+object NullLiteral : SqlLiteral()
+```
+
+The **StringLiteral** represents SQL string literals such as "hello" or "Alice". The **NumberLiteral** represents SQL numeric literals such as 1.20 or 1, handling both integers and decimal numbers. The **NullLiteral**, defined as an object, represents the **SQL NULL** value.
+
+### Putting it all together
+
+![https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjVwOHVob3NrdGhibGh2MHVhNnEybmljY3g5MDZpdWVvYmhnMm9kcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cRMgB2wjHhVN2tDD2z/giphy.gif](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjVwOHVob3NrdGhibGh2MHVhNnEybmljY3g5MDZpdWVvYmhnMm9kcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cRMgB2wjHhVN2tDD2z/giphy.gif)
+
+Let’s put all of this together and construct a Kotlin class representing the following complex insert statement:
+
+
+
+```sql
+INSERT INTO users (id, name, age) VALUES (1, UPPER('bob'), 12);
+
+```
+
+The corresponding Kotlin class equivalent would be:
+
+```kotlin
+val insertStatement = Insert(
+    table = "users",
+    columns = listOf("id", "name", "age"),
+    values = listOf(
+        LiteralExpression(NumberLiteral("1")),  // id = 1
+        FunctionCallExpression(  // name = UPPER('bob')
+            functionName = "UPPER",
+            arguments = listOf(LiteralExpression(StringLiteral("bob")))
+        ),
+        LiteralExpression(NumberLiteral(12))  // age = 12
+    )
+)
+```
+
+Whoop Whoop we have doneee it!!!!!!!🎉🎉🎉
+
+![https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHYwNWZqNTh3c3BtMDY5ZjIwdmNoYXRzMTB5MHZsOGJpZHA3cHd0dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4DUjG2ei31nA2evo5g/giphy.gif](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHYwNWZqNTh3c3BtMDY5ZjIwdmNoYXRzMTB5MHZsOGJpZHA3cHd0dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4DUjG2ei31nA2evo5g/giphy.gif)
+
+I think now you get idea of how we can construct Kotlin classes based on our SQL Grammar. You can find a complete Kotlin-classes representation of our SQL Grammar [here](https://gist.github.com/GibsonRuitiari/5b2b756415fd805a284ad22dafde5f79).
+
+## Conclusion
+
+In conclusion, we have explored grammar and its components, learning how to use EBNF notation to describe grammatical rules and its various control forms. We have thoroughly examined how to validate input against our rules using derivative trees, and demonstrated how to represent these grammar rules using Kotlin classes.
+
+## Up Next
+
+The next part of this series will focus on building a lexical analyzer for our compiler. The lexical analysis phase will handle input scanning, remove comments and unnecessary whitespace, compact characters where appropriate, and convert the input into a sequence of compiler-recognizable tokens.
+
+![https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExanVjazNleHpyaWZtdGdrYmg2emIyY215Yzl3M2dwOXVkZG5waWRqNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/UrcXN0zTfzTPi/giphy.gif](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExanVjazNleHpyaWZtdGdrYmg2emIyY215Yzl3M2dwOXVkZG5waWRqNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/UrcXN0zTfzTPi/giphy.gif)
+
