@@ -453,7 +453,10 @@ sealed class SqlStatement // our base class
 
 The next step is to define the **Insert** class without explicitly including the keywords **"INSERT INTO"** and **"VALUES"**. This is because these keywords are inherently represented by the class name and its properties. 
 Therefore, explicitly defining them would be redundant. However, this approach is **context-dependent**. 
-In scenarios such as designing a fully-fledged programming language, defining keywords explicitly—such as using **ENUMS**—may be necessary. In our case, however, we have chosen not to do so. The **Insert** class will contain **tableName**, **columns** and **values** as its properties. These properties represent the:
+
+In scenarios such as designing a fully-fledged programming language, defining keywords explicitly—such as using **ENUMS**—may be necessary. 
+In our case, however, we have chosen not to do so. The **Insert** class will contain **tableName**, **columns** and **values** as its properties. 
+These properties represent the:
 
     * tableName → name of the table being modified;
     * columns → list of column-names affected by the insertion operation; and
