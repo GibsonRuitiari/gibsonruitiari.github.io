@@ -364,13 +364,17 @@ of the `<select_statement>` rule, there is no way of proving that the input make
 
 ![Yes, EBNF is not perfeectt! I am sorry 😟](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXRkdm4xZWlkZHpoNzZieTI1NDdqd3Z1NDRicnllcW9saHdrbzA5aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qn6rtLtmwIX60/giphy.gif)
 
-Consider a scenario where the `age` column in our database only accepts **integers**, but the input provides **"1_"** as the age. 
-According to our `<select_statement>` rule, **"1_"** would be considered **syntactically valid**. However, from a **semantic** perspective,
-the underscore **_** makes the value **invalid**, as the database cannot interpret it as a valid integer. Accepting such incorrect 
-inputs can lead to unexpected or erroneous behavior. 
-This highlights a key limitation of **EBNF (Extended Backus-Naur Form)**: it defines only the **syntax** (structure) of a language but not its **semantics** (meaning). 
+Consider a scenario where the `age` column in our database only accepts integers, but the input provides "1_" as the age.
+
+According to our `<select_statement>`rule, "1_" would be considered **syntactically valid**. 
+However, from a semantic perspective, the underscore "_" makes the value invalid, as the database cannot interpret it as a valid integer. 
+Accepting such incorrect inputs can lead to unexpected or erroneous behavior. 
+This highlights a key limitation of EBNF (Extended Backus-Naur Form): 
+
+* it defines only the **syntax** (structure) of a language but not its **semantics** (meaning). 
 
 In other words, **EBNF alone cannot guarantee that a syntactically correct input is also meaningful or valid**. 
+
 Another important observation is that many of the rules we have discussed reference other rules, creating a **recursive** structure 
 in their definitions. 
 
