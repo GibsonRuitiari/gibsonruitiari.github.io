@@ -292,9 +292,12 @@ Given the `<insert_statement>` rule, an example of an SQL Statement that matches
  INSERT INTO USERS (NAME, AGE) VALUES ('JOHN', 12)  
 ```
 
-You may have noticed that **EBNF notation** allows us to **compactly describe** the syntax of **SELECT** and **INSERT** statements—something that would have been difficult to express otherwise.
+You may have noticed that **EBNF notation** allows us to **compactly describe** the syntax of **SELECT** and **INSERT** 
+statements—something that would have been difficult to express otherwise.
 This demonstrates a key advantage of using **formal notation**, particularly **EBNF**, to define the **syntactical structure** of a language. 
-However, an **observant reader** might notice that while we have provided **examples** of SQL statements that conform to our SQL grammar rules, we have not yet **formally proven** their correctness.
+However, an **observant reader** might notice that while we have provided **examples** of SQL statements that conform to our SQL grammar rules, 
+we have not yet **formally proven** their correctness.
+
 Thus, the next section will focus on **proving** that our example SQL statements **match** the rules we have defined.
 
 ### Proof Using Derivation Trees
@@ -346,9 +349,12 @@ Consider a scenario where the `age` column in our database only accepts **intege
 According to our `<select_statement>` rule, `"1_"` would be considered **syntactically valid**. However, from a **semantic** perspective,
 the underscore (`_`) makes the value **invalid**, as the database cannot interpret it as a valid integer. Accepting such incorrect 
 inputs can lead to unexpected or erroneous behavior. This highlights a key limitation of **EBNF (Extended Backus-Naur Form)**: it defines only the **syntax** (structure) of a language but not its **semantics** (meaning). 
+
 In other words, **EBNF alone cannot guarantee that a syntactically correct input is also meaningful or valid**. 
 Another important observation is that many of the rules we have discussed reference other rules, creating a **recursive** structure 
-in their definitions. To fully understand EBNF, we must briefly explore recursion, which is the focus of the next section.
+in their definitions. 
+
+To fully understand EBNF, we must briefly explore recursion, which is the focus of the next section.
 
 ### Recursion in EBNF
 
