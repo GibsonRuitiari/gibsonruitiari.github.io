@@ -20,8 +20,8 @@ or any other tutorial on the subject. There is going to be no introduction into 
 
 This particular series can be broken down as follows:
 
-1. Let’s Build an SQL Engine!
-2. SQL Engine, Prologue:  SQL Grammar
+1. [Let’s Build an SQL Engine!](https://gibsonruitiari.github.io/SQL%20Engine%20Series/lets_build_an_sq_engine)
+2. [SQL Engine, Prologue:  SQL Grammar](https://gibsonruitiari.github.io/SQL%20Engine%20Series/sql_engine_prologue_grammar)
 3. SQL Engine, Part 1: Lexical Analysis
 4. SQL Engine, Part 2: Parser
 5. SQL Engine, Part 3: Semantic Analysis
