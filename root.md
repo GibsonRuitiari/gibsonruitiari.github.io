@@ -1,6 +1,6 @@
-## Home
+## Home 
 
-<img alt="Happy Sloth.jpeg" height="400" src="https://github.com/GibsonRuitiari/gibsonruitiari.github.io/blob/main/resources/Happy%20Sloth.jpeg" width="400"/>
+![Happy Sloth.jpeg](https://github.com/GibsonRuitiari/gibsonruitiari.github.io/blob/main/resources/Happy%20Sloth.jpeg)
 
 Hi, I'm Gibson. A lawyer, a programmer (and/or an android developer) + tea-enthusiast
 
