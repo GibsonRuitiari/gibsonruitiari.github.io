@@ -451,10 +451,13 @@ sealed class SqlStatement // our base class
 
 ```
 
-1. Define the **Insert** class without explicitly including the keywords **"INSERT INTO"** and **"VALUES"**. This is because these keywords are inherently represented by the class name and its properties. Therefore, explicitly defining them would be redundant. However, this approach is **context-dependent**. In scenarios such as designing a fully-fledged programming language, defining keywords explicitly—such as using **ENUMS**—may be necessary. In our case, however, we have chosen not to do so. The **Insert** class will contain **tableName**, **columns** and **values** as its properties. These properties represent the:
-    1. tableName → name of the table being modified;
-    2. columns → list of column-names affected by the insertion operation; and
-    3. values → a list of values to be inserted.
+2. Define the **Insert** class without explicitly including the keywords **"INSERT INTO"** and **"VALUES"**. This is because these keywords are inherently represented by the class name and its properties. 
+Therefore, explicitly defining them would be redundant. However, this approach is **context-dependent**. 
+In scenarios such as designing a fully-fledged programming language, defining keywords explicitly—such as using **ENUMS**—may be necessary. In our case, however, we have chosen not to do so. The **Insert** class will contain **tableName**, **columns** and **values** as its properties. These properties represent the:
+
+    * tableName → name of the table being modified;
+    * columns → list of column-names affected by the insertion operation; and
+    * values → a list of values to be inserted.
 
 ```kotlin
 
@@ -466,9 +469,9 @@ val values: List<Expression>) : SqlStatement()
 The reason **values** is of type **Expression** is that our **insert_statement** requires a <values_list>, 
 which can expand into a sequence of <value> elements separated by commas. Specifically:
 
-1. A `<values_list>` consists of one or more `<value>` elements, separated by `","`
-2. Each `<value>` can be either an `<sql_literal>` (e.g., a string or number) or an `<expression>`
-3. An `<expression>` can further expand into an `<identifier>`, `<sql_literal>`, or a `<function_call>`.
+* A `<values_list>` consists of one or more `<value>` elements, separated by `","`
+* Each `<value>` can be either an `<sql_literal>` (e.g., a string or number) or an `<expression>`
+* An `<expression>` can further expand into an `<identifier>`, `<sql_literal>`, or a `<function_call>`.
 
 ```
 <value_list> → <value> {","<value>} *// Bob, 12*
@@ -487,8 +490,8 @@ Since SQL allows expressions in **INSERT** statements, for example inserting com
 INSERT INTO users (id, name, created_at) VALUES (1, UPPER('bob'), current_timestamp);
 ```
 
-defining **values** as **List<Expression>** ensures flexibility and correctness when handling different types of insertable data.
-1. Define our **Expression** class
+defining **values** as **List<Expression>** ensures flexibility and correctness when handling different types of insertable data. 
+Define our **Expression** class
 
 ```kotlin
 sealed class Expression
@@ -504,9 +507,9 @@ data class BinaryOperation(val left: Expression,val operator: Operator,
 val right: Expression) : Expression()
 ```
 
-Defining the Expression class as sealed class allows us handle different types of SQL expressions thus ensuring type-safety.
+3. Defining the Expression class as sealed class allows us handle different types of SQL expressions thus ensuring type-safety.
 
-1. The **IdentifierExpression** represents an SQL Identifier such as a column name, table name or an alias in an SQL Query. 
+The **IdentifierExpression** represents an SQL Identifier such as a column name, table name or an alias in an SQL Query. 
 The  **identifier** property stores the actual name. As an example:
 
 ```
@@ -517,7 +520,7 @@ SELECT name FROM users;
 val nameColumn = IdentifierExpression("name")
 ```
 
-1. The **LiteralExpression** represents a constant value in an SQL Statement. In this case, the value is of type ‘**SqlLiteral**’ 
+The **LiteralExpression** represents a constant value in an SQL Statement. In this case, the value is of type ‘**SqlLiteral**’ 
 and it can be either a **string**, **number** or **null.** As an example
 
 ```
@@ -527,7 +530,7 @@ SELECT 'Alice',
 val aliceLiteral= LiteralExpression(StringLiteral("Alice"))
 ```
 
-1. The **FunctionCallExpression** represents an SQL Query Function call. The arguments of the class store the name of the function and  list of expressions that are supposed to be the arguments of the function called. As an example:
+The **FunctionCallExpression** represents an SQL Query Function call. The arguments of the class store the name of the function and  list of expressions that are supposed to be the arguments of the function called. As an example:
 
 ```kotlin
 // sql statement
@@ -540,7 +543,7 @@ val upperFunction = FunctionCallExpression(
 )
 ```
 
-1. The **BinaryExpression** represents SQL Query binary operations such as “≠”, “==” & “AND”.  
+The **BinaryExpression** represents SQL Query binary operations such as “≠”, “==” & “AND”.  
 The **left** and **right** are the two expressions being worked on, and the **operator** represents the operation being performed. As an example:
 
 ```jsx
