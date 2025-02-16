@@ -193,7 +193,7 @@ It is important to note that in EBNF, terminals such as keywords are enclosed in
 
 ### Application
 
-Applying our knowledge of **EBNF**, we will construct two SQL statement rules: `**SELECT**` and `**INSERT**`. 
+Applying our knowledge of **EBNF**, we will construct two SQL statement rules: **SELECT** and **INSERT**. 
 This will demonstrate how to define rules using **EBNF notation** effectively. It is important to remember that an **SQL statement** can be either 
 a **SELECT** statement or an **INSERT** statement. Therefore, we begin with the **start symbol** `<sql_statement>`, 
 which can be represented in notation form as follows:
@@ -227,20 +227,22 @@ The `<select_statement>` rule is defined as sequence of `SELECT` keyword, `<sele
 The rule ends with two optional constructs: 
  - The `WHERE` keyword and a `<condition>`.
  - The `GROUP BY` keyword and an `<order_list>`.
-The `<column_list>` rule is defined as a sequence of `<identifier>`, followed by **zero or more** occurrences of `","` 
+The `<column_list>` rule is defined as a sequence of `<identifier>`, followed by **zero or more** occurrences of **","** 
 and another `<identifier>`. 
-The `<select_list>` rule can expand into either the **terminal symbol `"*"`** or the `<column_list>` rule. 
+The `<select_list>` rule can expand into either the terminal symbol **"*"** or the `<column_list>` rule. 
 The `<identifier>` rule expands into a single `<letter>` or `<digit>`, followed by **zero or more** occurrences of `<digit>`, `<letter>`, 
-or the terminal symbol `"_"`. 
+or the terminal symbol **"_"**. 
 The `<digit>` rule represents **any number from 0-9**, where each digit can be **selected independently** (e.g., you can choose `"0"` while discarding the rest). 
 The `<letter>` rule consists of either `<upper_case>` or `<lower_case>` letters
 The `<condition>` rule expands into a sequence of:  `<identifier>`, `<comparison_operator>` and `<identifier>`. 
-The `<comparison_operator>` rule consists of a set of alternatives, including `"="`, `">"`, and others.
+The `<comparison_operator>` rule consists of a set of alternatives, including **"="**, **">"**, and others.
 
 Given the `<select_statement>` rule, an example of an SQL Statement that matches it can be:
+
 ```jsx
          SELECT * FROM USERS WHERE AGE > 12  
 ```
+
 ![Agreeed](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3dyY3hqMGxqMXZwOWs1Z3c4M3JzZG4xMjNrcWRsb2RzYnVmZnhxbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/13ZHjidRzoi7n2/giphy.gif)
 
 For the `<insert_statement>` rule it can be represented in EBNF notation form as follows:
@@ -324,15 +326,18 @@ A **derivation tree** (also called a **parse tree**) provides a graphical repres
 For the rule and input discussed earlier, we can construct the derivation tree as follows:
 
 1. Choose the root node, which in this case is `<select_statement>`;
-2. Expand the root node into “SELECT” `<select_list>` “FROM” `<table_name>`, and optionally ["WHERE" `<condition>`] since the “where” part appears in our input
-3. Since “SELECT” is a terminal symbol, we go to the next symbol `<select_list>`, thus expand `<select_list>` into "*"  because  the symbol ‘*’ appears in our input. 
+2. Expand the root node into “**SELECT**” `<select_list>` “**FROM**” `<table_name>`, and optionally ["**WHERE**" `<condition>`] since the “**where**” 
+part appears in our input
+3. Since “**SELECT**” is a terminal symbol, we go to the next symbol `<select_list>`, thus expand `<select_list>` into "*".
 Note that we have dropped `<column_list>` because it does not appear in our input.
-4. Since “FROM” is a terminal symbol, we go to the next symbol `<table_name>`, we will expand it into `<identifier>`, which is then further expanded into “USERS”. 
-Note that the characters “USERS” are a combination of letters thus fitting the description of the `<identifier>` rule;
-5. Because the optional [”WHERE” `<condition>`] is included, expand into the “WHERE” `<condition>`
-6. Expand the `<condition>` rule into “AGE > 12”
+4. Since “**FROM**” is a terminal symbol, we go to the next symbol `<table_name>`, we will expand it into `<identifier>`, 
+which is then further expanded into “**USERS**”. 
+Note that the characters “**USERS**” are a combination of letters thus fitting the description of the `<identifier>` rule;
+5. Because the optional [**WHERE** `<condition>`] is included, expand into the “**WHERE**” `<condition>`
+6. Expand the `<condition>` rule into “**AGE > 12**”
 
 Graphically, this can be represented as:
+
 ![A derivation tree showing that “SELECT * FROM USERS WHERE AGE > 12” matches the description of select_statement rule](https://gibsonruitiari.github.io/resources/derivitative%20tree.png)
 
 Despite successfully proving our input matches with the description of the `<select_statement>` rule, you might have noticed a
@@ -345,10 +350,11 @@ of the `<select_statement>` rule, there is no way of proving that the input make
 
 ![Yes, EBNF is not perfeectt! I am sorry 😟](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXRkdm4xZWlkZHpoNzZieTI1NDdqd3Z1NDRicnllcW9saHdrbzA5aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qn6rtLtmwIX60/giphy.gif)
 
-Consider a scenario where the `age` column in our database only accepts **integers**, but the input provides `"1_"` as the age. 
-According to our `<select_statement>` rule, `"1_"` would be considered **syntactically valid**. However, from a **semantic** perspective,
-the underscore (`_`) makes the value **invalid**, as the database cannot interpret it as a valid integer. Accepting such incorrect 
-inputs can lead to unexpected or erroneous behavior. This highlights a key limitation of **EBNF (Extended Backus-Naur Form)**: it defines only the **syntax** (structure) of a language but not its **semantics** (meaning). 
+Consider a scenario where the `age` column in our database only accepts **integers**, but the input provides **"1_"** as the age. 
+According to our `<select_statement>` rule, **"1_"** would be considered **syntactically valid**. However, from a **semantic** perspective,
+the underscore **_** makes the value **invalid**, as the database cannot interpret it as a valid integer. Accepting such incorrect 
+inputs can lead to unexpected or erroneous behavior. 
+This highlights a key limitation of **EBNF (Extended Backus-Naur Form)**: it defines only the **syntax** (structure) of a language but not its **semantics** (meaning). 
 
 In other words, **EBNF alone cannot guarantee that a syntactically correct input is also meaningful or valid**. 
 Another important observation is that many of the rules we have discussed reference other rules, creating a **recursive** structure 
