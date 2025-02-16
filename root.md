@@ -13,5 +13,5 @@ If you're someone who enjoys diving deep into the mechanics of algorithms, syste
 
 ### Table of Contents
 
-1. Why You Should~~n’t~~ be Here
+1. [Why You Should~~n’t~~ be Here](https://github.com/GibsonRuitiari/gibsonruitiari.github.io/blob/main/about.md)
 2. Let’s Build an SQL Engine Series
