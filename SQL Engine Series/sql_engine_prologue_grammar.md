@@ -366,8 +366,10 @@ of the `<select_statement>` rule, there is no way of proving that the input make
 
 Consider a scenario where the `age` column in our database only accepts integers, but the input provides "1_" as the age.
 
-According to our `<select_statement>`rule, "1_" would be considered **syntactically valid**. 
-However, from a semantic perspective, the underscore "_" makes the value invalid, as the database cannot interpret it as a valid integer. 
+According to our `<select_statement>`rule, "1_" would be considered syntactically valid. 
+
+However, from a semantic perspective, the underscore  makes the value invalid, as the database cannot interpret it as a valid integer. 
+
 Accepting such incorrect inputs can lead to unexpected or erroneous behavior. 
 This highlights a key limitation of EBNF (Extended Backus-Naur Form): 
 
