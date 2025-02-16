@@ -1,5 +1,8 @@
 ## About This Space
 
+<img alt="Happy Sloth.jpeg" height="300" src="https://gibsonruitiari.github.io/resources/second_logo.jpeg" width="300"/>
+
+
 ## About Me
 
 I'm a programmer and an android-developer with a background in law. By day I am a lawyer, by night, a programmer. 
