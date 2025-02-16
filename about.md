@@ -1,6 +1,6 @@
  [[<u>home </u>]](https://gibsonruitiari.github.io/root)
-
- ## About This Space
+ 
+## About This Space
 
 <img alt="Happy Sloth.jpeg" height="300" src="https://gibsonruitiari.github.io/resources/second_logo.jpeg" width="300"/>
 
