@@ -13,7 +13,7 @@ If you're someone who enjoys diving deep into the mechanics of algorithms, syste
 
 ### Table of Contents
 
-1. [Why You Should~~n’t~~ be Here](https://gibsonruitiari.github.io/about.md)
-2. [Let’s Build an SQL Engine Series](https://gibsonruitiari.github.io/SQL%20Engine%20Series/lets_build_an_sq_engine.md)
+1. [Why You Should~~n’t~~ be Here](https://gibsonruitiari.github.io/about)
+2. [Let’s Build an SQL Engine Series](https://gibsonruitiari.github.io/SQL%20Engine%20Series/lets_build_an_sq_engine)
 
 
