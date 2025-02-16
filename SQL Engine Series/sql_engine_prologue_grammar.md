@@ -171,39 +171,53 @@ Whereby the `Object` might be option i.e., it might or might not be there. How t
 ![Hmm hol’ up, hol’ up… 🤔](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExejU5ZTJubjluZ2s4N2ZyYzRtazJ2Y2Rodzl3N3I3ejY2Z2duMXc5cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cn7GcSZ1KWqO7CJw1B/giphy.gif)
 
 This is where notations come in. Assume the symbol `[  ]` represents “optional” that is, anything enclosed inside it is optional, 
-it can either be there or not. Using this notation, we can describe the above English sentence structure as follows:
+it can either be there or not. 
+
+Using this notation, we can describe the above English sentence structure as follows:
+
 ```
               <sentence> → <subject> <verb> [<object>]
 ```
+
 Without notation, expressing the structure of an English sentence compactly can be challenging. 
 For this reason, language developers use **notations** to concisely define the **syntactical structure** of their languages.
+
 This discussion will focus on Extended Backus Naur Form (**EBNF**).
 
 ### Extended Backus Naur Form (EBNF)
 
-EBNF is a notation for formally and compactly describing the syntax of a language and/or its rules. To compactly write a rule, 
-EBNF provides four control forms that apply to the RHS (body of a rule). They are:
+EBNF is a notation for formally and compactly describing the syntax of a language and/or its rules. 
+To compactly write a rule, EBNF provides four control forms that apply to the RHS (body of a rule). They are:
 
 1. Sequence → a combination of items from left to right and the order in which the items appear is important. As an example, 
 `<subject>` `<verb>` uses a sequence control form because the symbols `subject` and `verb` follow each other sequentially.
+
 2. Choice → this is represented by `|`  and it is where we have a list of items and one is chosen from the list of alternatives.
 The order by which items appear is un-important. An example, “The” | “Are” uses the choice control form because the symbols 
 “The” and “Are” are alternatives which can be chosen to the exclusion of the other.
-3. Option → this is represented by `[  ]` and items enclosed inside the square brackets are optional, that is, they can either be there or not; they can either be included or discarded.
-4. Repetition → this is represented by `{   }` and items enclosed inside the curly brackets are repeatable, that is, they can be included 0 or more times.
 
-It is important to note that in EBNF, terminals such as keywords are enclosed inside `“...“`. Thus, any symbol enclosed inside 
-“…” is a terminal. As an example `the` is a terminal.
+3. Option → this is represented by `[  ]` and items enclosed inside the square brackets are optional, that is, they can either be there or not; 
+they can either be included or discarded.
+
+4. Repetition → this is represented by `{   }` and items enclosed inside the curly brackets are repeatable, that is, 
+they can be included 0 or more times.
+
+It is important to note that in EBNF, terminals such as keywords are enclosed inside `“...“`. 
+Thus, any symbol enclosed inside “…” is a terminal. As an example `the` is a terminal.
 
 ### Application
 
 Applying our knowledge of **EBNF**, we will construct two SQL statement rules: **SELECT** and **INSERT**. 
+
 This will demonstrate how to define rules using **EBNF notation** effectively. It is important to remember that an **SQL statement** can be either 
-a **SELECT** statement or an **INSERT** statement. Therefore, we begin with the **start symbol** `<sql_statement>`, 
-which can be represented in notation form as follows:
+a **SELECT** statement or an **INSERT** statement. 
+
+Therefore, we begin with the **start symbol** `<sql_statement>`, which can be represented in notation form as follows:
+
 ```
 <sql_statement> → <select_statement> | <insert_statement>
 ```
+
 The `<sql_statement>` rule can consist of either `<select_statement>` or `<insert_statement>`.
 
 The `<select_statement>` rule it can be represented in EBNF notation form as:
@@ -233,15 +247,15 @@ The rule ends with two optional constructs:
  - The `WHERE` keyword and a `<condition>`.
  - The `GROUP BY` keyword and an `<order_list>`.
 
-The `<column_list>` rule is defined as a sequence of `<identifier>`, followed by **zero or more** occurrences of **","** 
+The `<column_list>` rule is defined as a sequence of `<identifier>`, followed by **zero or more** occurrences of "," 
 and another `<identifier>`. 
 
-The `<select_list>` rule can expand into either the terminal symbol **"*"** or the `<column_list>` rule. 
+The `<select_list>` rule can expand into either the terminal symbol "*" or the `<column_list>` rule. 
 
-The `<identifier>` rule expands into a single `<letter>` or `<digit>`, followed by **zero or more** occurrences of `<digit>`, `<letter>`, 
-or the terminal symbol **"_"**. 
+The `<identifier>` rule expands into a single `<letter>` or `<digit>`, followed by zero or more occurrences of `<digit>`, `<letter>`, 
+or the terminal symbol "_". 
 
-The `<digit>` rule represents **any number from 0-9**, where each digit can be **selected independently** (e.g., you can choose `"0"` while discarding the rest). 
+The `<digit>` rule represents any number from 0-9, where each digit can be selected independently (e.g., you can choose `"0"` while discarding the rest). 
 
 The `<letter>` rule consists of either `<upper_case>` or `<lower_case>` letters.
 
@@ -287,19 +301,33 @@ For the `<insert_statement>` rule it can be represented in EBNF notation form as
 
 <letter>  → <upper_case> | <lower_case>
 ```
-The `<insert_statement>` rule can be described as a sequence of: **INSERT INTO** keyword, `<identifer>` rule, "(" terminal symbol, 
-`<column_list>` rule, ")" terminal symbol,  **VALUES** keyword, "(" terminal symbol, `<value_list>` rule,  and ")" terminal symbol.
+The `<insert_statement>` rule can be described as a sequence of: 
 
-On the other hand, the `<value_list>` rule is defined as a sequence of `<value>` followed by **one or more** occurrences of ", " and another `<value>`.
+* INSERT INTO keyword;
+* `<identifer>` rule;
+* "(" terminal symbol, 
+*`<column_list>` rule; 
+* ")" terminal symbol;
+* VALUES keyword; 
+* "(" terminal symbol;
+* `<value_list>` rule;and
+* ")" terminal symbol.
+
+On the other hand, the `<value_list>` rule is defined as a sequence of `<value>` followed by one or more occurrences of ", " and another `<value>`.
+
 A `<value>` is described by the `<sql_literal>` rule, which can expand into a `<string>`, a  `<number>`, or `<null>`. 
+
 A `<string>` expands into a sequence of characters enclosed in either double quotes `"  "` or single quotes `' '`. 
 
 The `<characters>` rule expands into either:
+
     - A single `<character>` chosen from `<digit>` or `<letter>`, or
+
     - A sequence of `<character>` followed by `<characters>`.
 
 The `<number>` rule expands into `<integer_part>`, which is further expanded into a sequence of digit and repeatable.
-The `<null>` rule expands into the terminal symbol **"null"**.
+
+The `<null>` rule expands into the terminal symbol "null".
 
 Given the `<insert_statement>` rule, an example of an SQL Statement that matches it can be:
 
@@ -307,48 +335,63 @@ Given the `<insert_statement>` rule, an example of an SQL Statement that matches
  INSERT INTO USERS (NAME, AGE) VALUES ('JOHN', 12)  
 ```
 
-You may have noticed that **EBNF notation** allows us to **compactly describe** the syntax of **SELECT** and **INSERT** 
+You may have noticed that EBNF notation allows us to compactly describe the syntax of SELECT and INSERT 
 statements—something that would have been difficult to express otherwise.
-This demonstrates a key advantage of using **formal notation**, particularly **EBNF**, to define the **syntactical structure** of a language. 
-However, an **observant reader** might notice that while we have provided **examples** of SQL statements that conform to our SQL grammar rules, 
-we have not yet **formally proven** their correctness.
+
+This demonstrates a key advantage of using formal notation, particularly EBNF, to define the syntactical structure of a language. 
+
+However, an observant reader might notice that while we have provided examples of SQL statements that conform to our SQL grammar rules, 
+we have not yet formally proven their correctness.
 
 Thus, the next section will focus on **proving** that our example SQL statements **match** the rules we have defined.
 
 ### Proof Using Derivation Trees
+
 Knowing how to read and write a grammar rule using EBNF notation is one thing—proving that an input conforms to the rule is another.
 
 For example, given the input:  `SELECT * FROM USERS WHERE AGE > 12`, can we demonstrate that a compiler will correctly match it to the rule:
 
 ```sql
 <select_statement> → "SELECT" <select_list> "FROM" <table_name>  
+
 ["WHERE" <condition>] ["GROUP BY" <column_list>]
+
 ```
 
 By proving that the input matches this rule, we gain insight into how the compiler processes our grammar rule in relation to the given input.
 
 ![https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHZ1YW14cWFoZ2I2M3R2MGtnajg3ejNsdGFuMnRpNnJwbjRvcGViciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3orieUe6ejxSFxYCXe/giphy.gif](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHZ1YW14cWFoZ2I2M3R2MGtnajg3ejNsdGFuMnRpNnJwbjRvcGViciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3orieUe6ejxSFxYCXe/giphy.gif)
 
-There are several methods to **prove** that a given input conforms to a grammar rule. One such method—and the focus of this discussion—is the **derivation tree**.
+There are several methods to **prove** that a given input conforms to a grammar rule. 
+One such method—and the focus of this discussion—is the **derivation tree**.
 
 A **derivation tree** (also called a **parse tree**) provides a graphical representation of how an input string is derived from a grammar rule.
 
 - The **root node** of the tree represents the grammar rule being applied.
+
 - The **leaf nodes** contain the actual symbols from the input string.
+
 - The **characters** of these symbols appear at the **bottom** of the tree and are read from **left to right**.
 
 For the rule and input discussed earlier, we can construct the derivation tree as follows:
 
-1. Choose the root node, which in this case is `<select_statement>`;
-2. Expand the root node into “**SELECT**” `<select_list>` “**FROM**” `<table_name>`, and optionally ["**WHERE**" `<condition>`] since the “**where**” 
-part appears in our input
-3. Since “**SELECT**” is a terminal symbol, we go to the next symbol `<select_list>`, thus expand `<select_list>` into "*".
+1. Choose the root node, which in this case is `<select_statement>`
+
+2. Expand the root node into SELECT `<select_list>` FROM `<table_name>`, and optionally [WHERE `<condition>`] 
+since the "where" part appears in our input.
+
+3. Since “SELECT” is a terminal symbol, we go to the next symbol `<select_list>`, thus expand `<select_list>` into "*".
+
 Note that we have dropped `<column_list>` because it does not appear in our input.
-4. Since “**FROM**” is a terminal symbol, we go to the next symbol `<table_name>`, we will expand it into `<identifier>`, 
-which is then further expanded into “**USERS**”. 
-Note that the characters “**USERS**” are a combination of letters thus fitting the description of the `<identifier>` rule;
-5. Because the optional [**WHERE** `<condition>`] is included, expand into the “**WHERE**” `<condition>`
-6. Expand the `<condition>` rule into “**AGE > 12**”
+
+4. Since “FROM” is a terminal symbol, we go to the next symbol `<table_name>`, we will expand it into `<identifier>`, 
+which is then further expanded into “USERS”. 
+
+Note that the characters “USERS” are a combination of letters thus fitting the description of the `<identifier>` rule;
+
+5. Because the optional [WHERE `<condition>`] is included, expand into the “WHERE” `<condition>`.
+
+6. Expand the `<condition>` rule into “AGE > 12”
 
 Graphically, this can be represented as:
 
