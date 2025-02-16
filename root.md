@@ -1,4 +1,6 @@
-![Happy Sloth.jpeg](attachment:5f867ec2-7e07-4b45-b313-95f94ee0aa9c:Happy_Sloth.jpeg)
+## Home 
+
+![Happy Sloth.jpeg](https://github.com/GibsonRuitiari/gibsonruitiari.github.io/blob/main/resources/Happy%20Sloth.jpeg)
 
 Hi, I'm Gibson. A lawyer, a programmer (and/or an android developer) + tea-enthusiast
 
