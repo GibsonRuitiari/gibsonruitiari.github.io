@@ -273,19 +273,21 @@ For the `<insert_statement>` rule it can be represented in EBNF notation form as
 
 <letter>  → <upper_case> | <lower_case>
 ```
-The `<insert_statement>` rule can be described as a sequence of: `INSERT INTO` keyword, `<identifer>` rule, `(` terminal symbol, `<column_list>` rule, `)` terminal symbol,  `VALUES` keyword, ``(` terminal symbol,
-`<value_list`> rule,  and `)` terminal symbol.
+The `<insert_statement>` rule can be described as a sequence of: **INSERT INTO** keyword, `<identifer>` rule, "**(**" terminal symbol, 
+`<column_list> ` rule, "**)**" terminal symbol,  **VALUES** keyword, "**(**" terminal symbol, ` <value_list> ` rule,  and "**)**" terminal symbol.
 
-On the other hand, the `<value_list>` rule is defined as a sequence of `<value>` followed by **one or more** occurrences of `,` and another `<value>`.
+On the other hand, the `<value_list>` rule is defined as a sequence of `<value>` followed by **one or more** occurrences of **,** and another ` <value> `.
 A `<value>` is described by the `<sql_literal>` rule, which can expand into a `<string>`, a `<number>`, or `<null>`. 
-A `<string>` expands into a sequence of characters enclosed in either double quotes `" "` or single quotes `' '`. 
+A `<string>` expands into a sequence of characters enclosed in either double quotes **" "** or single quotes **' '**. 
+
 The `<characters>` rule expands into either:
     - A single `<character>` chosen from `<digit>` or `<letter>`, or
     - A sequence of `<character>` followed by `<characters>`.
-The `<number>` rule expands into `<integer_part>`, which is further expanded into a sequence of digit and repeatable.
-The `<null>` rule expands into the terminal symbol `"null"`.
 
-Given the <insert_statement*>* rule, an example of an SQL Statement that matches it can be:
+The `<number>` rule expands into `<integer_part>`, which is further expanded into a sequence of digit and repeatable.
+The `<null>` rule expands into the terminal symbol **"null"**.
+
+Given the `<insert_statement>` rule, an example of an SQL Statement that matches it can be:
 ```
  INSERT INTO USERS (NAME, AGE) VALUES ('JOHN', 12)  
 ```
@@ -300,7 +302,8 @@ Knowing how to read and write a grammar rule using EBNF notation is one thing—
 
 For example, given the input:  `SELECT * FROM USERS WHERE AGE > 12`, can we demonstrate that a compiler will correctly match it to the rule:
 ```sql
-<select_statement> → "SELECT" <select_list> "FROM" <table_name>  ["WHERE" <condition>] ["GROUP BY" <column_list>]
+<select_statement> → "SELECT" <select_list> "FROM" <table_name>  
+["WHERE" <condition>] ["GROUP BY" <column_list>]
 ```
 
 By proving that the input matches this rule, we gain insight into how the compiler processes our grammar rule in relation to the given input.
@@ -392,7 +395,7 @@ The alternative rule can be understood as follows:
 
 An `<expression>` consists of a `<term>` followed by zero or more occurrences of an `<operator>` and another `<term>`. 
 The `<term>` itself can expand into either a `<sql_literal>` or another `<expression>`. While this alternative definition 
-produces the same result as the original `<expression>` rule, it introduces an additional abstraction (`<term>`), 
+produces the same result as the original `<expression>` rule, it introduces an additional abstraction `<term>`, 
 which increases complexity without adding significant value. When implementing direct recursion in parsing, it is essential 
 to include a non-recursive alternative to **prevent infinite recursion**. In our implementation, `<sql_literal>` serves as this base case, 
 ensuring termination. 
@@ -405,7 +408,8 @@ The next and final part will focus on what we've been building up to: constructi
 
 ## Representing Our SQL Grammar in Kotlin
 
-We have already defined some of the most essential SQL statements, namely insert and select statements. At this point, you should understand how to construct, read, and verify grammar rules. You can find a complete structure of our SQL Grammar rules [here](https://www.notion.so/2e4614eee5b37bedab198b167f3e74bd?pvs=21).
+We have already defined some of the most essential SQL statements, namely insert and select statements. At this point, you should understand how to construct, read, and verify grammar rules. 
+You can find a complete structure of our SQL Grammar rules [here](https://gist.github.com/GibsonRuitiari/2e4614eee5b37bedab198b167f3e74bd).
 
 A complete SQL statement can be one of the following: an **INSERT** statement, a **SELECT** statement, an **UPDATE** statement, or a **DELETE** statement. Since an SQL statement has multiple distinct types, we can represent this using **Kotlin’s sealed classes**, ensuring **type safety** and **exhaustive handling** in `when` expressions.
 
@@ -429,7 +433,8 @@ val columns: List<String>,
 val values: List<Expression>) : SqlStatement()
 ```
 
-The reason **values** is of type **Expression** is that our **insert_statement** requires a **<values_list>**, which can expand into a sequence of **<value>** elements separated by commas. Specifically:
+The reason **values** is of type **Expression** is that our **insert_statement** requires a <values_list>, 
+which can expand into a sequence of <value> elements separated by commas. Specifically:
 
 1. A `<values_list>` consists of one or more `<value>` elements, separated by `","`
 2. Each `<value>` can be either an `<sql_literal>` (e.g., a string or number) or an `<expression>`
@@ -471,7 +476,8 @@ val right: Expression) : Expression()
 
 Defining the Expression class as sealed class allows us handle different types of SQL expressions thus ensuring type-safety.
 
-1. The **IdentifierExpression** represents an SQL Identifier such as a column name, table name or an alias in an SQL Query. The  **identifier** property stores the actual name. As an example:
+1. The **IdentifierExpression** represents an SQL Identifier such as a column name, table name or an alias in an SQL Query. 
+The  **identifier** property stores the actual name. As an example:
 
 ```
 // sql statement
@@ -481,7 +487,8 @@ SELECT name FROM users;
 val nameColumn = IdentifierExpression("name")
 ```
 
-1. The **LiteralExpression** represents a constant value in an SQL Statement. In this case, the value is of type ‘**SqlLiteral**’ and it can be either a **string**, **number** or **null.** As an example
+1. The **LiteralExpression** represents a constant value in an SQL Statement. In this case, the value is of type ‘**SqlLiteral**’ 
+and it can be either a **string**, **number** or **null.** As an example
 
 ```
 // sql statement
@@ -543,7 +550,6 @@ The **StringLiteral** represents SQL string literals such as "hello" or "Alice".
 Let’s put all of this together and construct a Kotlin class representing the following complex insert statement:
 ```sql
 INSERT INTO users (id, name, age) VALUES (1, UPPER('bob'), 12);
-
 ```
 The corresponding Kotlin class equivalent would be:
 ```kotlin
