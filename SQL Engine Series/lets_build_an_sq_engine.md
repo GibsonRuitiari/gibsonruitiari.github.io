@@ -12,13 +12,9 @@ Now you might be cracking your head, scratching it and wondering why would I wan
 it's a fantastic learning opportunity! You'll get hands-on experience with: 
 Parsers, Lexical Analyzers, Compilers, Finite Automaton, B+ Trees - basically everything 😃!. Also, you get a chance to do something fun!
 
-<aside>
-⚠️
-
-If you are not familiar with SQL or need a refresher, I would highly recommend going through this [Quick Reference](https://www.sqltutorial.org/) 
+⚠️ If you are not familiar with SQL or need a refresher, I would highly recommend going through this [Quick Reference](https://www.sqltutorial.org/)
 or any other tutorial on the subject. There is going to be no introduction into SQL in this series. You only need to know the basics to continue.
 
-</aside>
 
 ## Series Breakdown
 
@@ -31,7 +27,8 @@ This particular series can be broken down as follows:
 5. SQL Engine, Part 3: Semantic Analysis
 6. SQL Engine, Part 4:  Query Execution
 
-By the end of this journey, you'll have a working SQL engine that can parse, validate, and execute queries—all built from scratch, without external libraries!
+By the end of this journey, you'll have a working SQL engine that can parse, validate, and execute queries—all built from scratch, 
+without external libraries!
 
 ## Next Up
 
