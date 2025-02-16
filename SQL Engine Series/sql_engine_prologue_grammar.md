@@ -302,6 +302,7 @@ The `<number>` rule expands into `<integer_part>`, which is further expanded int
 The `<null>` rule expands into the terminal symbol **"null"**.
 
 Given the `<insert_statement>` rule, an example of an SQL Statement that matches it can be:
+
 ```
  INSERT INTO USERS (NAME, AGE) VALUES ('JOHN', 12)  
 ```
@@ -318,6 +319,7 @@ Thus, the next section will focus on **proving** that our example SQL statements
 Knowing how to read and write a grammar rule using EBNF notation is one thing—proving that an input conforms to the rule is another.
 
 For example, given the input:  `SELECT * FROM USERS WHERE AGE > 12`, can we demonstrate that a compiler will correctly match it to the rule:
+
 ```sql
 <select_statement> → "SELECT" <select_list> "FROM" <table_name>  
 ["WHERE" <condition>] ["GROUP BY" <column_list>]
@@ -385,6 +387,7 @@ There are two types of recursion: mutual and direct. We'll focus on direct recur
 
 Direct recursion occurs when a rule references its own name within its definition. To illustrate this concept, 
 consider how SQL statements can contain expressions that evaluate to single values. For example, take a simple select statement such as
+
 ```
          SELECT * FROM USERS WHERE AGE > (10+AGE)
 ```
@@ -409,6 +412,7 @@ combination of `<expression>`, `<operator>`, and another `<expression>`. This st
 We can create a non-recursive alternative by introducing an abstract non-terminal rule that transforms the recursive rule 
 into an equivalent iterative form. This means breaking down the recursive rule into sequential, processable steps.
 Following this approach, we can express it as:
+
 ```
 <expression> → <term> {<operator> <term>} 
 
@@ -442,6 +446,7 @@ The steps include:
 1. Define a base **SqlStatement** sealed class
 
 ```kotlin
+
 sealed class SqlStatement // our base class
 
 ```
@@ -452,6 +457,7 @@ sealed class SqlStatement // our base class
     3. values → a list of values to be inserted.
 
 ```kotlin
+
 data class Insert(val tableName: String,    
 val columns: List<String>,    
 val values: List<Expression>) : SqlStatement()
@@ -536,7 +542,8 @@ val upperFunction = FunctionCallExpression(
 
 1. The **BinaryExpression** represents SQL Query binary operations such as “≠”, “==” & “AND”.  
 The **left** and **right** are the two expressions being worked on, and the **operator** represents the operation being performed. As an example:
-```
+
+```jsx
 // sql statement
 SELECT age + 5 FROM users WHERE name = 'Alice';
 
@@ -553,6 +560,7 @@ val condition = BinaryOperation(
     right = LiteralExpression(StringLiteral("Alice"))
 )
 ```
+
 The **SqlLiteral** class can be defined as follows:
 
 ```kotlin
@@ -572,10 +580,13 @@ The **StringLiteral** represents SQL string literals such as "hello" or "Alice".
 ![https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjVwOHVob3NrdGhibGh2MHVhNnEybmljY3g5MDZpdWVvYmhnMm9kcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cRMgB2wjHhVN2tDD2z/giphy.gif](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjVwOHVob3NrdGhibGh2MHVhNnEybmljY3g5MDZpdWVvYmhnMm9kcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cRMgB2wjHhVN2tDD2z/giphy.gif)
 
 Let’s put all of this together and construct a Kotlin class representing the following complex insert statement:
+
 ```sql
 INSERT INTO users (id, name, age) VALUES (1, UPPER('bob'), 12);
 ```
+
 The corresponding Kotlin class equivalent would be:
+
 ```kotlin
 val insertStatement = Insert(
     table = "users",
